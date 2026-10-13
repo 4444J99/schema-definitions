@@ -30,6 +30,17 @@ try:
 except ImportError:
     yaml = None
 
+# Load failures for one explicit CLI input must surface as that target's
+# ordinary FAIL result, never abort the batch. YAML parse errors do not
+# subclass ValueError, so include them explicitly when PyYAML is available.
+_LOAD_ERROR_TYPES: tuple[type[BaseException], ...] = (
+    OSError,
+    UnicodeError,
+    ValueError,
+)
+if yaml is not None:
+    _LOAD_ERROR_TYPES = (*_LOAD_ERROR_TYPES, yaml.YAMLError)
+
 if __package__:
     from .schema_formats import FORMAT_CHECKER
     from .validate_governance_memory import (
@@ -935,7 +946,13 @@ def validate_file(
     if schema_path is None:
         return False, [f"Cannot detect schema for {filepath.name}"]
 
-    data = load_data(filepath)
+    try:
+        data = load_data(filepath)
+    except _LOAD_ERROR_TYPES as exc:
+        # A single malformed input must fail as an ordinary per-target FAIL,
+        # never abort the batch with a traceback.
+        detail = " ".join(str(exc).split())
+        return False, [f"  cannot load {filepath.name}: {detail}"]
     with open(schema_path) as f:
         schema = json.load(f)
 
