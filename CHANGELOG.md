@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Isolate malformed JSON/YAML inputs within validation batches: `validate_file()` now returns a bounded one-line FAIL for parse/read errors instead of aborting the whole run with a traceback (Fixes #20).
+- Note green Release Drafter success on the malformed-input isolation branch (run 38512932725).
 - Add `project-record-v1.schema.json` and a valid YAML example for reader-mode
   documentation, with canonical identity, implementation/deployment state,
   authorship, structured claim posture, assertion-evidence references,
