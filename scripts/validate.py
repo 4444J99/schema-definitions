@@ -1,1 +1,1 @@
-$(cat /tmp/validate.py)
+$(cat /tmp/validate_good.py)
