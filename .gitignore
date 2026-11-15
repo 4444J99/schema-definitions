@@ -49,3 +49,13 @@ htmlcov/
 .env.*.local
 .claude/
 2026-*.txt
+
+# Agent work records are kept in a private archive, not in public repos.
+.claude/plans/
+.claude/handoffs/
+.codex/plans/
+.codex/receipts/
+.gemini/plans/
+.gemini/handoffs/
+.conductor/
+.specstory/
